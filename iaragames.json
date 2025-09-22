@@ -1,0 +1,197 @@
+[
+    {
+        "id": "tab-games",
+        "type": "tab",
+        "label": "Iara Games",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "inject-load",
+        "type": "inject",
+        "z": "tab-games",
+        "name": "Carregar catálogo (na inicialização)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 80,
+        "wires": [
+            [
+                "d28e0b5cef6a059b"
+            ]
+        ]
+    },
+    {
+        "id": "function-filter",
+        "type": "function",
+        "z": "tab-games",
+        "name": "Filtrar catálogo",
+        "func": "const q = String(msg.payload || '').trim().toLowerCase();\nconst games = global.get('games') || [];\nif (!q) {\n  msg.payload = games.slice().sort((a,b)=>a.name.localeCompare(b.name));\n  msg.count = msg.payload.length;\n  return msg;\n}\nconst filtered = games.filter(g => {\n  const hay = [g.name, g.genre, g.platform, g.year].join(' ').toLowerCase();\n  return hay.includes(q);\n}).sort((a,b)=>a.name.localeCompare(b.name));\nmsg.payload = filtered;\nmsg.count = filtered.length;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 180,
+        "wires": [
+            [
+                "6679b872c4e1c56d"
+            ]
+        ]
+    },
+    {
+        "id": "function-clear",
+        "type": "function",
+        "z": "tab-games",
+        "name": "Resetar lista",
+        "func": "const games = global.get('games') || [];\nmsg.payload = games.slice().sort((a,b)=>a.name.localeCompare(b.name));\nmsg.count = msg.payload.length;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 220,
+        "wires": [
+            [
+                "6679b872c4e1c56d"
+            ]
+        ]
+    },
+    {
+        "id": "d28e0b5cef6a059b",
+        "type": "function",
+        "z": "tab-games",
+        "name": "Seed: jogos exemplo em global.games",
+        "func": "const games = [\n  { name: 'Enigma do Medo', genre: 'Terror / Aventura', platform: 'PC', year: 2024, image: 'https://amimarinho.github.io/iara-games/assets/img/enigma_do_medo.jpg' },\n  { name: 'Adore', genre: 'Action RPG / Roguelike', platform: 'PC/PS/Xbox/Switch', year: 2023, image: 'https://amimarinho.github.io/iara-games/assets/img/adore.jpg' },\n  { name: 'Irmão do Jorel e o Jogo Mais Importante da Galáxia', genre: 'Aventura / Comédia', platform: 'PC', year: 2023, image: 'https://amimarinho.github.io/iara-games/assets/img/irmao-do-jorel-e-o-jogo-mais-importante-da-galaxia-banner.jpg' },\n  { name: 'Dandy Ace', genre: 'Roguelike / Ação', platform: 'PC/Xbox/Switch', year: 2021, image: 'https://amimarinho.github.io/iara-games/assets/img/dandy_ace.jpg' },\n  { name: 'Mark of the Deep', genre: 'Ação / Aventura', platform: 'PC', year: 2023, image: 'https://amimarinho.github.io/iara-games/assets/img/mark-of-the-deep-banner.png' },\n  { name: 'Redo', genre: 'Metroidvania / Ação', platform: 'PC', year: 2019, image: 'https://amimarinho.github.io/iara-games/assets/img/redo.jpg' },\n  { name: 'Akane', genre: 'Ação / Hack and Slash', platform: 'PC/Switch', year: 2018, image: 'https://amimarinho.github.io/iara-games/assets/img/akane-banner.png' },\n  { name: 'Dandara: Trials of Fear Edition', genre: 'Metroidvania', platform: 'PC/PS/Xbox/Switch/Mobile', year: 2018, image: 'https://assets.nintendo.com/image/upload/ar_16:9,c_lpad,w_656/b_white/f_auto/q_auto/ncom/software/switch/70010000004800/1d561ffd7bfa532e60fab66b39d3f8aa290975b8b5f7dc3f37497b5c47574397' },\n  { name: 'Unsighted', genre: 'Ação / Aventura / RPG', platform: 'PC/PS/Xbox/Switch', year: 2021, image: 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1062110/header.jpg?t=1709409664' },\n  { name: 'Toren', genre: 'Aventura / Puzzle', platform: 'PC/PS4', year: 2015, image: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/320820/header.jpg?t=1628278359' },\n  { name: 'Ekorella', genre: 'Aventura / Plataforma', platform: 'PC', year: 2022, image: 'https://amimarinho.github.io/iara-games/assets/img/ekorella_vol1.png' }\n];\n\nglobal.set('games', games);\nmsg.payload = games;\nmsg.count = games.length;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 60,
+        "wires": [
+            [
+                "6679b872c4e1c56d"
+            ]
+        ]
+    },
+    {
+        "id": "ui-button-clear",
+        "type": "ui_button",
+        "z": "tab-games",
+        "name": "",
+        "group": "ui-group",
+        "order": 2,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "label": "Limpar",
+        "tooltip": "Limpar busca",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 480,
+        "y": 180,
+        "wires": [
+            [
+                "function-clear"
+            ]
+        ]
+    },
+    {
+        "id": "ui-text-search",
+        "type": "ui_text_input",
+        "z": "tab-games",
+        "name": "",
+        "label": "Buscar",
+        "tooltip": "Digite nome, gênero, plataforma ou ano",
+        "group": "ui-group",
+        "order": 1,
+        "width": 8,
+        "height": 1,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "search",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "str",
+        "x": 230,
+        "y": 180,
+        "wires": [
+            [
+                "function-filter"
+            ]
+        ]
+    },
+    {
+        "id": "6679b872c4e1c56d",
+        "type": "ui_template",
+        "z": "tab-games",
+        "group": "ui-group",
+        "name": "Lista de jogos",
+        "order": 3,
+        "width": 12,
+        "height": 8,
+        "format": "<style>\n  .game-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.08)}\n  .thumb{width:48px;height:48px;border-radius:12px;object-fit:cover;box-shadow:0 1px 3px rgba(0,0,0,.15)}\n  .fallback{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#f0f0f0;box-shadow:0 1px 3px rgba(0,0,0,.1);font-size:22px}\n  .title{margin:0 0 2px 0;font-weight:600}\n  .meta{margin:0;opacity:.9}\n</style>\n<div layout=\"column\" layout-padding>\n  <div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;\">\n    <h3 style=\"margin:0;\">Catálogo</h3>\n    <span style=\"opacity:0.8\">{{msg.count || (msg.payload && msg.payload.length) || 0}} encontrados</span>\n  </div>\n  <md-divider></md-divider>\n  <div ng-repeat=\"g in msg.payload\" class=\"game-row\" title=\"{{g.name}}\">\n    <img ng-if=\"g.image\" ng-src=\"{{g.image}}\" class=\"thumb\">\n    <div ng-if=\"!g.image\" class=\"fallback\">🎮</div>\n    <div class=\"md-list-item-text\" layout=\"column\">\n      <h4 class=\"title\">{{g.name}}</h4>\n      <p class=\"meta\">{{g.genre}} • {{g.platform}} • {{g.year}}</p>\n    </div>\n  </div>\n  <div ng-if=\"!msg.payload || msg.payload.length === 0\" style=\"padding:16px;opacity:0.7;\">\n    Nenhum jogo encontrado.\n  </div>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1100,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ui-group",
+        "type": "ui_group",
+        "name": "Catálogo de Jogos",
+        "tab": "ui-tab",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ui-tab",
+        "type": "ui_tab",
+        "name": "Iara Games",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "81d46d3a158a135f",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
